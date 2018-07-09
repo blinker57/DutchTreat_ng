@@ -539,7 +539,7 @@ if(false) {}
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\Projects\dutchtreatg\DutchTreat\ClientApp\styles.css */"./styles.css");
+module.exports = __webpack_require__(/*! D:\Projects\dutchtreat_ng\DutchTreat\ClientApp\styles.css */"./styles.css");
 
 
 /***/ })
