@@ -16,6 +16,7 @@ var order_1 = require("./order");
 var DataService = /** @class */ (function () {
     function DataService(http) {
         this.http = http;
+        this.token = "";
         this.order = new order_1.Order();
         this.products = [];
     }
@@ -27,12 +28,48 @@ var DataService = /** @class */ (function () {
             return true;
         }));
     };
+    Object.defineProperty(DataService.prototype, "loginRequired", {
+        //public loadProducts(): Observable<Product[]> {
+        //  return this.http.get("/api/products")
+        //    .map((result: Response) => this.products = result.json());
+        //}
+        get: function () {
+            return this.token.length == 0 || this.tokenExpiration > new Date();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    DataService.prototype.login = function (creds) {
+        var _this = this;
+        return this.http
+            .post("/account/createtoken", creds)
+            .pipe(operators_1.map(function (data) {
+            //        let tokenInfo = response.json();
+            _this.token = data.token;
+            _this.tokenExpiration = data.expiration;
+            return true;
+        }));
+    };
+    DataService.prototype.checkout = function () {
+        var _this = this;
+        if (!this.order.orderNumber) {
+            this.order.orderNumber = this.order.orderDate.getFullYear().toString() + this.order.orderDate.getTime().toString();
+        }
+        return this.http.post("/api/orders", this.order, {
+            headers: new http_1.HttpHeaders().set("Authorization", "Bearer" + this.token)
+        })
+            .pipe(operators_1.map(function (response) {
+            _this.order = new order_1.Order();
+            return true;
+        }));
+    };
     DataService.prototype.addToOrder = function (product) {
         var item = this.order.items.find(function (i) { return i.productId == product.id; });
         if (item) {
             item.quantity++;
         }
         else {
+            item = new order_1.OrderItem();
             item.productId = product.id;
             item.productArtist = product.artist;
             item.productArtId = product.artId;

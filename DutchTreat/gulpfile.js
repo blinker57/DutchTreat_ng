@@ -1,4 +1,6 @@
 ﻿var gulp = require("gulp");
+var uglify = require("gulp-uglify");
+var concat = require("gulp-concat");
 
 var deps = {
   "jquery": {
@@ -25,6 +27,15 @@ gulp.task('default', function() {
         .pipe(gulp.dest("wwwroot/vendor/" + prop + "/" + deps[prop][itemProp])));
     }
   }
+
+  gulp.task("minify", function() {
+    return gulp.src("wwwroot/scripts/**/*.js")
+      .pipe(uglify())
+      .pipe(concat("dutchtreat.min.js"))
+      .pipe(gulp.dest("wwwroot/dist"));
+  })
+
+  gulp.task('default', ["minify"]);
 
   return merge(streams);
 });

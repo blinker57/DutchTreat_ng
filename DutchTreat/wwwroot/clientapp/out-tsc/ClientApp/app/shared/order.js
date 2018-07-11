@@ -6,7 +6,7 @@ var Order = /** @class */ (function () {
         this.items = new Array();
         //get subtotal(): number {
         //  return _.sum(_.map(this.items, i => i.unitPrice * i.quantity));
-        //}
+        //};
     }
     return Order;
 }());

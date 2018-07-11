@@ -12,30 +12,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var dataService_1 = require("../shared/dataService");
 var router_1 = require("@angular/router");
-var Cart = /** @class */ (function () {
-    function Cart(data, router) {
+var Checkout = /** @class */ (function () {
+    function Checkout(data, router) {
         this.data = data;
         this.router = router;
+        this.errorMessage = "";
     }
-    Cart.prototype.onCheckout = function () {
-        if (this.data.loginRequired) {
-            // Force login
-            this.router.navigate(["login"]);
-        }
-        else {
-            // Go to checkout
-            this.router.navigate(["checkout"]);
-        }
+    Checkout.prototype.onCheckout = function () {
+        var _this = this;
+        this.data.checkout()
+            .subscribe(function (success) {
+            if (success) {
+                _this.router.navigate(["/"]);
+            }
+        }, function (err) { return _this.errorMessage = "Failed to save order"; });
     };
-    Cart = __decorate([
+    Checkout = __decorate([
         core_1.Component({
-            selector: "the-cart",
-            templateUrl: "cart.component.html",
-            styleUrls: []
+            selector: "checkout",
+            templateUrl: "checkout.component.html",
+            styleUrls: ['checkout.component.css']
         }),
         __metadata("design:paramtypes", [dataService_1.DataService, router_1.Router])
-    ], Cart);
-    return Cart;
+    ], Checkout);
+    return Checkout;
 }());
-exports.Cart = Cart;
-//# sourceMappingURL=cart.component.js.map
+exports.Checkout = Checkout;
+//# sourceMappingURL=checkout.component.js.map
